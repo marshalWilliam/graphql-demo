@@ -1,27 +1,39 @@
 import { gql } from "apollo-server-koa";
-import { accounts, products } from "./sample-data";
+import {
+  getAccounts,
+  getProducts,
+  getAccount,
+  getProduct,
+} from "../src/functions";
+import { binaryScalar } from "./scalars/binary";
+import { dateTimeScalar } from "./scalars/datetime";
+import { emailAddScalar } from "./scalars/emailadd";
 
 export const typeDefs = gql`
+  scalar Binary
+  scalar EmailAddress
+  scalar DateTime
+
   interface Node {
-    id: String!
+    id: Binary!
   }
 
   type Account implements Node {
-    id: String!
+    id: Binary!
     firstname: String!
     lastname: String!
-    emailAddress: String!
-    createdAt: String!
-    updatedAt: String!
+    emailAddress: EmailAddress!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type Product implements Node {
-    id: String!
+    id: Binary!
     name: String!
     description: String!
     owner: Account!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type Authentication {
@@ -31,21 +43,35 @@ export const typeDefs = gql`
   type Query {
     accounts: [Account]
     products: [Product]
-    account(id: String!): Account
-    product(id: String!): Product
+    account(id: Binary!): Account
+    product(id: Binary!): Product
   }
 `;
 
 //Resolver
 export const resolvers = {
+  Binary: binaryScalar,
+  EmailAddress: emailAddScalar,
+  DateTime: dateTimeScalar,
+
   Query: {
-    accounts: () => accounts,
-    products: () => products,
-    account: (_: never, args: any) => {
-      return accounts.find((account) => account.id === args.id);
+    accounts: async () => {
+      return getAccounts();
     },
-    product: (_: never, args: any) => {
-      return products.find((product) => product.id === args.id);
+    products: async () => {
+      return getProducts();
+    },
+    account: async (_: never, args: any) => {
+      return getAccount(args.id);
+    },
+    product: async (_: never, args: any) => {
+      return getProduct(args.id);
+    },
+  },
+
+  Product: {
+    owner: async (parent: any) => {
+      return getAccount(parent.owner);
     },
   },
 };
