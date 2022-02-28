@@ -1,10 +1,6 @@
 import { gql } from "apollo-server-koa";
-import {
-  getAccounts,
-  getProducts,
-  getAccount,
-  getProduct,
-} from "../src/functions";
+import { mutations } from "./resolvers/mutations";
+import { queries } from "./resolvers/query";
 import { binaryScalar } from "./scalars/binary";
 import { dateTimeScalar } from "./scalars/datetime";
 import { emailAddScalar } from "./scalars/emailadd";
@@ -40,6 +36,17 @@ export const typeDefs = gql`
     token: String!
   }
 
+  type Mutation {
+    signUp(input: SignUpInput!): Authentication!
+  }
+
+  input SignUpInput {
+    emailAddress: EmailAddress!
+    firstname: String!
+    lastname: String!
+    password: String!
+  }
+
   type Query {
     accounts: [Account]
     products: [Product]
@@ -54,24 +61,7 @@ export const resolvers = {
   EmailAddress: emailAddScalar,
   DateTime: dateTimeScalar,
 
-  Query: {
-    accounts: async () => {
-      return getAccounts();
-    },
-    products: async () => {
-      return getProducts();
-    },
-    account: async (_: never, args: any) => {
-      return getAccount(args.id);
-    },
-    product: async (_: never, args: any) => {
-      return getProduct(args.id);
-    },
-  },
+  ...queries,
 
-  Product: {
-    owner: async (parent: any) => {
-      return getAccount(parent.owner);
-    },
-  },
+  ...mutations,
 };

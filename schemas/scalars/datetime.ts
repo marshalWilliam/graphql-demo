@@ -19,7 +19,7 @@ export const dateTimeScalar = new GraphQLScalarType({
 
     if (ast.value !== new Date(Date.parse(ast.value)).toISOString()) {
       throw new UserInputError(
-        `BAD_USER_INPUT: Date: ${ast.value} is not a valid ISO date string`
+        "Date " + ast.value + " is not a valid ISO date string"
       );
     }
 

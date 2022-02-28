@@ -15,7 +15,7 @@ const validate = (value: any) => {
     throw new UserInputError(`Value is not a valid email address: ${value}`);
   }
 
-  return value;
+  return value.toLowerCase().trim();
 };
 
 export const emailAddScalar = new GraphQLScalarType({
