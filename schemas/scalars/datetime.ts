@@ -1,5 +1,9 @@
 import { UserInputError } from "apollo-server-core";
+import dayjs from "dayjs";
+import formatParser from "dayjs/plugin/customParseFormat";
 import { GraphQLError, GraphQLScalarType, Kind } from "graphql";
+
+dayjs.extend(formatParser);
 
 export const dateTimeScalar = new GraphQLScalarType({
   name: "DateTime",
@@ -17,7 +21,7 @@ export const dateTimeScalar = new GraphQLScalarType({
       );
     }
 
-    if (ast.value !== new Date(Date.parse(ast.value)).toISOString()) {
+    if (!dayjs(ast.value, "YYYY-MM-DDTHH:mm:ss.sssZ", true).isValid()) {
       throw new UserInputError(
         "Date " + ast.value + " is not a valid ISO date string"
       );
