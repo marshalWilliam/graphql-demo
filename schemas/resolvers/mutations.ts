@@ -1,18 +1,13 @@
-import { addUser } from "../functions";
-
-type User = {
-  input: {
-    emailAddress: string;
-    firstname: string;
-    lastname: string;
-    password: string;
-  };
-};
+import { addUser, login } from "../functions";
+import { LoginUser, CreateUser } from "../usertypes";
 
 export const mutations = {
   Mutation: {
-    signUp(_: never, { input }: User) {
+    signUp(_: undefined, { input }: CreateUser) {
       return addUser(input);
+    },
+    authenticate(_: undefined, { input }: LoginUser) {
+      return login(input);
     },
   },
   Authentication: {

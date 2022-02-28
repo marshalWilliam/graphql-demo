@@ -5,13 +5,7 @@ import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import accountModel from "../models/accounts";
 import productModel from "../models/products";
-
-type User = {
-  emailAddress: string;
-  firstname: string;
-  lastname: string;
-  password: string;
-};
+import { LoginUser, CreateUser } from "./usertypes";
 
 //Display all Accounts
 export const getAccounts = async () => {
@@ -19,22 +13,22 @@ export const getAccounts = async () => {
 };
 
 //Display all Products
-export const getProducts = async () => {
+export async function getProducts() {
   return productModel.find({});
-};
+}
 
 // Find Account
-export const getAccount = async (userid: Buffer) => {
+export async function getAccount(userid: Buffer) {
   return accountModel.findById(userid);
-};
+}
 
 // Find Product
-export const getProduct = async (userid: Buffer) => {
+export async function getProduct(userid: Buffer) {
   return productModel.findById(userid);
-};
+}
 
 // POST
-export const addUser = async (user: User) => {
+export async function addUser(user: CreateUser["input"]): Promise<string> {
   //console.log(user);
   if (await checkEmail(user.emailAddress)) {
     throw new UserInputError("Email address already used.");
@@ -59,7 +53,21 @@ export const addUser = async (user: User) => {
   await newUser.save();
 
   return token;
-};
+}
+
+//User Login
+export async function login(userLogin: LoginUser["input"]) {
+  const userInfo = await checkEmail(userLogin.emailAddress);
+  if (userInfo) {
+    if (await bycrypt.compare(userLogin.password, userInfo.password)) {
+      return userInfo.token;
+    } else {
+      throw new UserInputError("Invalid credentials.");
+    }
+  } else {
+    throw new UserInputError("Invalid credentials.");
+  }
+}
 
 // // PUT
 // export const updateUser = async (

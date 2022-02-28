@@ -38,12 +38,18 @@ export const typeDefs = gql`
 
   type Mutation {
     signUp(input: SignUpInput!): Authentication!
+    authenticate(input: AuthenticateInput!): Authentication!
   }
 
   input SignUpInput {
     emailAddress: EmailAddress!
     firstname: String!
     lastname: String!
+    password: String!
+  }
+
+  input AuthenticateInput {
+    emailAddress: EmailAddress!
     password: String!
   }
 
