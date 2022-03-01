@@ -21,5 +21,14 @@ export async function startApolloServer() {
   server.applyMiddleware({ app });
   httpServer.on("request", app.callback());
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
-  console.log(`🚀 Server ready at http://localhost:5000${server.graphqlPath}`);
+
+  if (process.env.NODE_ENV === "test") {
+    const result = { server, url: httpServer };
+
+    return result;
+  } else {
+    console.log(
+      `🚀 Server ready at http://localhost:5000${server.graphqlPath}`
+    );
+  }
 }

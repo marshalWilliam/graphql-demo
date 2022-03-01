@@ -1,11 +1,15 @@
 import { gql } from "apollo-server-koa";
-import { mutations } from "./resolvers/mutations";
-import { queries } from "./resolvers/query";
+import { mutations_resolver } from "./resolvers/resolver_mutations";
+import { queries_resolver } from "./resolvers/resolver_query";
 import { binaryScalar } from "./scalars/binary";
 import { dateTimeScalar } from "./scalars/datetime";
 import { emailAddScalar } from "./scalars/emailadd";
+import { inputs_typeDefs } from "./typeDefs/typeDefs_inputs";
+import { mutation_typeDefs } from "./typeDefs/typeDefs_mutations";
+import { query_typeDefs } from "./typeDefs/typeDefs_query";
+import { types_typeDefs } from "./typeDefs/typeDefs_types";
 
-export const typeDefs = gql`
+const rootDef = gql`
   scalar Binary
   scalar EmailAddress
   scalar DateTime
@@ -13,53 +17,15 @@ export const typeDefs = gql`
   interface Node {
     id: Binary!
   }
-
-  type Account implements Node {
-    id: Binary!
-    firstname: String!
-    lastname: String!
-    emailAddress: EmailAddress!
-    createdAt: DateTime!
-    updatedAt: DateTime!
-  }
-
-  type Product implements Node {
-    id: Binary!
-    name: String!
-    description: String!
-    owner: Account!
-    createdAt: DateTime!
-    updatedAt: DateTime!
-  }
-
-  type Authentication {
-    token: String!
-  }
-
-  type Mutation {
-    signUp(input: SignUpInput!): Authentication!
-    authenticate(input: AuthenticateInput!): Authentication!
-  }
-
-  input SignUpInput {
-    emailAddress: EmailAddress!
-    firstname: String!
-    lastname: String!
-    password: String!
-  }
-
-  input AuthenticateInput {
-    emailAddress: EmailAddress!
-    password: String!
-  }
-
-  type Query {
-    accounts: [Account]
-    products: [Product]
-    account(id: Binary!): Account
-    product(id: Binary!): Product
-  }
 `;
+
+export const typeDefs = [
+  rootDef,
+  inputs_typeDefs,
+  mutation_typeDefs,
+  query_typeDefs,
+  types_typeDefs,
+];
 
 //Resolver
 export const resolvers = {
@@ -67,7 +33,7 @@ export const resolvers = {
   EmailAddress: emailAddScalar,
   DateTime: dateTimeScalar,
 
-  ...queries,
+  ...queries_resolver,
 
-  ...mutations,
+  ...mutations_resolver,
 };

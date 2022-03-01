@@ -1,7 +1,7 @@
-import { addUser, login } from "../functions";
-import { LoginUser, CreateUser } from "../usertypes";
+import { addUser, login } from "../functions/post";
+import { LoginUser, CreateUser } from "../functions/usertypes";
 
-export const mutations = {
+export const mutations_resolver = {
   Mutation: {
     signUp(_: undefined, { input }: CreateUser) {
       return addUser(input);
