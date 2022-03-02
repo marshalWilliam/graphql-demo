@@ -8,7 +8,10 @@ export function main() {
     mongoose
       .connect(host)
       .then((value) => {
-        console.log(`Successfully connected...`);
+        if (process.env.NODE_ENV !== "test") {
+          console.log(`Successfully connected...`);
+        }
+
         resolve(value);
       })
       .catch((e) => {

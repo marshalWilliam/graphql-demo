@@ -1,6 +1,11 @@
-import { getAccounts, getProducts, getAccount, getProduct } from "../functions";
+import {
+  getAccounts,
+  getProducts,
+  getAccount,
+  getProduct,
+} from "../functions/get";
 
-export const queries = {
+export const queries_resolver = {
   Query: {
     accounts: async () => {
       return getAccounts();
