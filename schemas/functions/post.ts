@@ -52,3 +52,16 @@ async function getUserInfo(user: CreateUser["input"]) {
 
   return { id, email, hashedPassword, token };
 }
+
+//Add Product
+export async function addProduct(productInfo: any) {
+  const id = uuidv4().replaceAll("-", "").concat("product");
+  const newProduct = new productModel({
+    _id: id,
+    name: productInfo.name,
+    description: productInfo.description,
+    owner: productInfo.id,
+  });
+
+  return newProduct.save();
+}

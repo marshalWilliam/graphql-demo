@@ -22,11 +22,18 @@ export function privateDirectiveTransformer(
           Object.defineProperty(context, "isAuth", {
             value: false,
             writable: true,
+            enumerable: true,
+          });
+          Object.defineProperty(args.input, "id", {
+            value: null,
+            writable: true,
+            enumerable: true,
           });
 
           if (userInfo) {
             if (await checkEmail(userInfo.email)) {
               context.isAuth = true;
+              args.input.id = userInfo.user_id;
             }
           }
 

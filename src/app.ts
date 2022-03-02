@@ -13,7 +13,9 @@ export async function startApolloServer() {
   const server = new ApolloServer({
     schema,
     context: ({ ctx }) => {
-      return JSON.parse(ctx.headers.authorization);
+      if (ctx.headers.authorization) {
+        return JSON.parse(ctx.headers.authorization);
+      }
     },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
