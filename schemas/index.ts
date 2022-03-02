@@ -14,6 +14,8 @@ const rootDef = gql`
   scalar EmailAddress
   scalar DateTime
 
+  directive @private on OBJECT | FIELD_DEFINITION
+
   interface Node {
     id: Binary!
   }

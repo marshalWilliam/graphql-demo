@@ -3,7 +3,7 @@ import http = require("http");
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import { ApolloServer } from "apollo-server-koa";
 import Koa = require("koa");
-import { typeDefs, resolvers } from "../schemas/index";
+import schema from "../schemas/directives/schemaTransform";
 
 const port = process.env.PORT || 5000;
 
@@ -11,8 +11,10 @@ const port = process.env.PORT || 5000;
 export async function startApolloServer() {
   const httpServer = http.createServer();
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema,
+    context: ({ ctx }) => {
+      return JSON.parse(ctx.headers.authorization);
+    },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
 
