@@ -1,51 +1,39 @@
 import { gql } from "apollo-server-koa";
-import { accounts, products } from "./sample-data";
+import { mutations_resolver } from "./resolvers/resolver_mutations";
+import { queries_resolver } from "./resolvers/resolver_query";
+import { binaryScalar } from "./scalars/binary";
+import { dateTimeScalar } from "./scalars/datetime";
+import { emailAddScalar } from "./scalars/emailadd";
+import { inputs_typeDefs } from "./typeDefs/typeDefs_inputs";
+import { mutation_typeDefs } from "./typeDefs/typeDefs_mutations";
+import { query_typeDefs } from "./typeDefs/typeDefs_query";
+import { types_typeDefs } from "./typeDefs/typeDefs_types";
 
-export const typeDefs = gql`
+const rootDef = gql`
+  scalar Binary
+  scalar EmailAddress
+  scalar DateTime
+
   interface Node {
-    id: String!
-  }
-
-  type Account implements Node {
-    id: String!
-    firstname: String!
-    lastname: String!
-    emailAddress: String!
-    createdAt: String!
-    updatedAt: String!
-  }
-
-  type Product implements Node {
-    id: String!
-    name: String!
-    description: String!
-    owner: Account!
-    createdAt: String!
-    updatedAt: String!
-  }
-
-  type Authentication {
-    token: String!
-  }
-
-  type Query {
-    accounts: [Account]
-    products: [Product]
-    account(id: String!): Account
-    product(id: String!): Product
+    id: Binary!
   }
 `;
 
+export const typeDefs = [
+  rootDef,
+  inputs_typeDefs,
+  mutation_typeDefs,
+  query_typeDefs,
+  types_typeDefs,
+];
+
 //Resolver
 export const resolvers = {
-  Query: {
-    accounts: () => accounts,
-    products: () => products,
-    account: (_: never, args: any) => {
-      return accounts.find((account) => account.id === args.id);
-    },
-    product: (_: never, args: any) => {
-      return products.find((product) => product.id === args.id);
-    },
-  },
+  Binary: binaryScalar,
+  EmailAddress: emailAddScalar,
+  DateTime: dateTimeScalar,
+
+  ...queries_resolver,
+
+  ...mutations_resolver,
 };
