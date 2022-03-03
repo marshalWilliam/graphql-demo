@@ -12,23 +12,4 @@ export const inputs_typeDefs = gql`
     emailAddress: EmailAddress!
     password: String!
   }
-
-  input CreateProductInput {
-    name: String!
-    description: String!
-  }
-
-  input UpdateProductInput {
-    id: Binary!
-    body: UpdateProductBody!
-  }
-
-  input UpdateProductBody {
-    name: String
-    description: String
-  }
-
-  input DeleteProductInput {
-    id: Binary!
-  }
 `;

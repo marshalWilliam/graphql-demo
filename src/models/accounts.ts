@@ -6,6 +6,7 @@ type AccountDocument = {
   lastname: string;
   emailAddress: string;
   password: string;
+  token: string;
 } & Document;
 
 const accountSchema = new Schema<AccountDocument>(
@@ -15,6 +16,7 @@ const accountSchema = new Schema<AccountDocument>(
     lastname: { type: String, required: true },
     emailAddress: { type: String, unique: true, required: true },
     password: { type: String, required: true },
+    token: { type: String, required: true },
   },
   { timestamps: true }
 );

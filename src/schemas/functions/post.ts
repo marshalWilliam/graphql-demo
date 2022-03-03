@@ -1,13 +1,12 @@
 import { UserInputError } from "apollo-server-core";
 import bycrypt from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
 import accountModel from "../../models/accounts";
 import productModel from "../../models/products";
-import { checkEmail, getID, issueToken } from "./get";
+import { checkEmail, issueToken } from "./get";
 import { LoginUser, CreateUser } from "./usertypes";
 
-//ACCOUNTS
-
-// Add a new User Account
+// POST
 export async function addUser(user: CreateUser["input"]): Promise<string> {
   //console.log(user);
   if (await checkEmail(user.emailAddress)) {
@@ -22,6 +21,7 @@ export async function addUser(user: CreateUser["input"]): Promise<string> {
     lastname: user.lastname.trim(),
     emailAddress: email,
     password: hashedPassword,
+    token,
   });
 
   await newUser.save();
@@ -32,11 +32,12 @@ export async function addUser(user: CreateUser["input"]): Promise<string> {
 //User Login
 export async function login(userLogin: LoginUser["input"]) {
   const userInfo = await checkEmail(userLogin.emailAddress);
-  if (
-    userInfo &&
-    (await bycrypt.compare(userLogin.password, userInfo.password))
-  ) {
-    return issueToken(userInfo.id, userInfo.emailAddress);
+  if (userInfo) {
+    if (await bycrypt.compare(userLogin.password, userInfo.password)) {
+      return userInfo.token;
+    } else {
+      throw new UserInputError("Invalid credentials.");
+    }
   } else {
     throw new UserInputError("Invalid credentials.");
   }
@@ -44,26 +45,10 @@ export async function login(userLogin: LoginUser["input"]) {
 
 //User
 async function getUserInfo(user: CreateUser["input"]) {
-  const id = getID("account");
+  const id = uuidv4().replaceAll("-", "").concat("account");
   const hashedPassword = await bycrypt.hash(user.password, 10);
   const email = user.emailAddress;
   const token = issueToken(id, email);
 
   return { id, email, hashedPassword, token };
-}
-
-/*************************************************************************** */
-// PRODUCTS
-
-//Add Product
-export async function addProduct(productInfo: any, userInfo: any) {
-  const id = getID("product");
-  const newProduct = new productModel({
-    _id: id,
-    name: productInfo.name,
-    description: productInfo.description,
-    owner: userInfo.id,
-  });
-
-  return newProduct.save();
 }
