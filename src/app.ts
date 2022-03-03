@@ -3,7 +3,7 @@ import http = require("http");
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import { ApolloServer } from "apollo-server-koa";
 import Koa = require("koa");
-import schema from "../schemas/directives/schemaTransformm";
+import schema from "./schemas/directives/schemaTransformm";
 
 const port = process.env.PORT || 5000;
 
