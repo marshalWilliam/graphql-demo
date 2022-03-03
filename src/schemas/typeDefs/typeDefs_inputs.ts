@@ -17,4 +17,18 @@ export const inputs_typeDefs = gql`
     name: String!
     description: String!
   }
+
+  input UpdateProductInput {
+    id: Binary!
+    body: UpdateProductBody!
+  }
+
+  input UpdateProductBody {
+    name: String
+    description: String
+  }
+
+  input DeleteProductInput {
+    id: Binary!
+  }
 `;

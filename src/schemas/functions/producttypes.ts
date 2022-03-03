@@ -9,4 +9,15 @@ export type CreateProduct = {
 export type ContextType = {
   bearer: string;
   isAuth: boolean;
+  user: any;
+};
+
+export type UpdateProduct = {
+  input: {
+    id: Buffer;
+    body: {
+      name: string;
+      description: string;
+    };
+  };
 };

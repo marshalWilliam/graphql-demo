@@ -56,13 +56,13 @@ async function getUserInfo(user: CreateUser["input"]) {
 // PRODUCTS
 
 //Add Product
-export async function addProduct(productInfo: any) {
+export async function addProduct(productInfo: any, userInfo: any) {
   const id = getID("product");
   const newProduct = new productModel({
     _id: id,
     name: productInfo.name,
     description: productInfo.description,
-    owner: productInfo.id,
+    owner: userInfo.id,
   });
 
   return newProduct.save();

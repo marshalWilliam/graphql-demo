@@ -23,7 +23,7 @@ export async function getProduct(userid: Buffer) {
   return productModel.findById(userid);
 }
 
-//Check if email exist
+//Check if account email exist
 export async function checkEmail(email: string) {
   return accountModel.findOne({ emailAddress: email });
 }
@@ -38,4 +38,8 @@ export async function issueToken(id: string, email: string) {
 // Get unique ID
 export function getID(identifier: string) {
   return uuidv4().replaceAll("-", "").concat(identifier);
+}
+
+export async function checkID(id: string) {
+  return accountModel.findById(id);
 }
