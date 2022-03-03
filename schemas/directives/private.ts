@@ -1,7 +1,7 @@
 import { mapSchema, getDirective, MapperKind } from "@graphql-tools/utils";
 import { GraphQLSchema, defaultFieldResolver } from "graphql";
-import { decode } from "jsonwebtoken";
-import { checkEmail } from "../functions/get";
+import { verify } from "jsonwebtoken";
+import { checkID } from "../functions/get";
 
 export function privateDirectiveTransformer(
   schema: GraphQLSchema,
@@ -18,14 +18,11 @@ export function privateDirectiveTransformer(
         const { resolve = defaultFieldResolver } = fieldConfig;
 
         fieldConfig.resolve = async function (source, args, context, info) {
-          const userInfo: any = decode(context.bearer);
-          Object.defineProperty(context, "isAuth", {
-            value: false,
-            writable: true,
-          });
+          const userInfo: any = verify(context.bearer, "RANDOM_STRING");
 
           if (userInfo) {
-            if (await checkEmail(userInfo.email)) {
+            context.user = await checkID(userInfo.user_id);
+            if (context.user) {
               context.isAuth = true;
             }
           }
