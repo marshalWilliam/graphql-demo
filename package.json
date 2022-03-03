@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/CodeRandomware/graphql-demo#readme",
   "dependencies": {
+    "@graphql-tools/schema": "^8.3.2",
+    "@graphql-tools/utils": "^8.6.2",
     "apollo-server-core": "^3.6.3",
     "apollo-server-koa": "^3.6.3",
     "graphql": "^16.3.0",
