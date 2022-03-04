@@ -6,5 +6,6 @@ export const mutation_typeDefs = gql`
     authenticate(input: AuthenticateInput!): Authentication!
     createProduct(input: CreateProductInput!): Product! @private
     updateProduct(input: UpdateProductInput!): Product! @private
+    deleteProduct(input: DeleteProductInput!): Boolean! @private
   }
 `;
