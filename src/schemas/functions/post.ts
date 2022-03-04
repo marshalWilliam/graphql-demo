@@ -3,6 +3,7 @@ import bycrypt from "bcryptjs";
 import accountModel from "../../models/accounts";
 import productModel from "../../models/products";
 import { checkEmail, getID, issueToken } from "./get";
+import { CreateProduct } from "./producttypes";
 import { LoginUser, CreateUser } from "./usertypes";
 
 //ACCOUNTS
@@ -56,13 +57,16 @@ async function getUserInfo(user: CreateUser["input"]) {
 // PRODUCTS
 
 //Add Product
-export async function addProduct(productInfo: any, userInfo: any) {
+export async function addProduct(
+  productInfo: CreateProduct["input"],
+  userID: string
+) {
   const id = getID("product");
   const newProduct = new productModel({
     _id: id,
     name: productInfo.name,
     description: productInfo.description,
-    owner: userInfo.id,
+    owner: userID,
   });
 
   return newProduct.save();
