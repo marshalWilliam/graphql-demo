@@ -59,7 +59,7 @@ async function getUserInfo(user: CreateUser["input"]) {
 //Add Product
 export async function addProduct(
   productInfo: CreateProduct["input"],
-  userID: string
+  userID: Buffer
 ) {
   const id = getID("product");
   const newProduct = new productModel({

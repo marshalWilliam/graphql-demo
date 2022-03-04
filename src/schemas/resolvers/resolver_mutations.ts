@@ -15,9 +15,10 @@ export const mutations_resolver = {
       { input }: CreateProduct,
       context: ContextType
     ) {
-      return addProduct(input, context.user);
+      return addProduct(input, Buffer.from(context.user.id));
     },
   },
+
   Authentication: {
     token: (parent: string) => {
       return parent;
