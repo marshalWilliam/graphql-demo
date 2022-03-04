@@ -12,4 +12,9 @@ export const inputs_typeDefs = gql`
     emailAddress: EmailAddress!
     password: String!
   }
+
+  input CreateProductInput {
+    name: String!
+    description: String!
+  }
 `;

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 import accountModel from "../../models/accounts";
 import productModel from "../../models/products";
 
@@ -22,13 +23,23 @@ export async function getProduct(userid: Buffer) {
   return productModel.findById(userid);
 }
 
-//Check if email exist
+//Check if account email exist
 export async function checkEmail(email: string) {
   return accountModel.findOne({ emailAddress: email });
 }
 
+// Issue a JWT
 export async function issueToken(id: string, email: string) {
   return jwt.sign({ user_id: id, email }, "RANDOM_STRING", {
     expiresIn: "1h",
   });
+}
+
+// Get unique ID
+export function getID(identifier: string) {
+  return uuidv4().replaceAll("-", "").concat(identifier);
+}
+
+export async function checkID(id: string) {
+  return accountModel.findById(id);
 }
