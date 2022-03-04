@@ -1,5 +1,11 @@
+import { delete_Product } from "../functions/delete";
 import { addProduct, addUser, login } from "../functions/post";
-import { ContextType, CreateProduct } from "../functions/producttypes";
+import {
+  ContextType,
+  CreateProduct,
+  UpdateProduct,
+} from "../functions/producttypes";
+import { update_Product } from "../functions/put";
 import { LoginUser, CreateUser } from "../functions/usertypes";
 
 export const mutations_resolver = {
@@ -16,6 +22,13 @@ export const mutations_resolver = {
       context: ContextType
     ) {
       return addProduct(input, Buffer.from(context.user.id));
+    },
+    updateProduct(
+      _: undefined,
+      { input }: UpdateProduct,
+      context: ContextType
+    ) {
+      return update_Product(input, context.user.id);
     },
   },
 
