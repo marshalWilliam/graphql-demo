@@ -5,7 +5,7 @@ import productModel from "../../models/products";
 export const delete_Product = async (productID: Buffer, userID: Buffer) => {
   const product = await checkProduct(productID);
   if (product) {
-    if (!Buffer.compare(product.owner, userID)) {
+    if (Buffer.compare(product.owner, userID) === 0) {
       if (await productModel.findByIdAndDelete(productID)) return true;
     } else {
       throw new UserInputError("Cannot delete product.");
