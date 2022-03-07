@@ -27,4 +27,8 @@ export const inputs_typeDefs = gql`
     name: String
     description: String
   }
+
+  input DeleteProductInput {
+    id: Binary!
+  }
 `;

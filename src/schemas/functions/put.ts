@@ -9,7 +9,7 @@ export const update_Product = async (
 ) => {
   const product = await checkProduct(productInfo.id);
   if (product) {
-    if (product.owner == userID) {
+    if (Buffer.compare(product.owner, userID) === 0) {
       return productModel.findByIdAndUpdate(
         productInfo.id,
         {
