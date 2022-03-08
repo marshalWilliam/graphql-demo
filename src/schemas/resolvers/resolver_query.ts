@@ -1,77 +1,65 @@
-import { UserInputError } from "apollo-server-core";
-import { getAccount, getProduct } from "../functions/get";
-import { Product } from "../functions/producttypes";
+import { checkID, getAccount } from "../functions/get";
+import { ContextType, Product } from "../functions/producttypes";
 import { ID, User } from "../functions/usertypes";
 
 export const queries_resolver = {
   Query: {
     node: async (_: undefined, { id }: ID) => {
-      let result: any;
+      return checkID(id);
+    },
+  },
+
+  Node: {
+    __resolveType: ({ id }: ID) => {
       if (id.includes("product", 32)) {
-        result = await getProduct(id);
-        if (result) {
-          return {
-            __typename: "Product",
-            result,
-          };
-        } else {
-          throw new UserInputError("ID not found");
-        }
+        return "Product";
       } else if (id.includes("account", 32)) {
-        result = await getAccount(id);
-        if (result) {
-          return {
-            __typename: "Account",
-            result,
-          };
-        } else {
-          throw new UserInputError("ID not found");
-        }
+        return "Account";
       } else {
-        throw new UserInputError("ID not found");
+        return null;
       }
     },
   },
 
   Account: {
-    id: ({ result }: User) => {
-      return result.id;
+    id: (user: User["result"]) => {
+      return user.id;
     },
-    firstname: ({ result }: User) => {
-      return result.firstname;
+    firstname: (user: User["result"]) => {
+      return user.firstname;
     },
-    lastname: ({ result }: User) => {
-      return result.lastname;
+    lastname: (user: User["result"]) => {
+      return user.lastname;
     },
-    emailAddress: ({ result }: User) => {
-      return result.emailAddress;
+    emailAddress: (user: User["result"]) => {
+      return user.emailAddress;
     },
-    createdAt: ({ result }: User) => {
-      return result.createdAt;
+    createdAt: (user: User["result"]) => {
+      return user.createdAt;
     },
-    updatedAt: ({ result }: User) => {
-      return result.updatedAt;
+    updatedAt: (user: User["result"]) => {
+      return user.updatedAt;
     },
   },
 
   Product: {
-    id: ({ result }: Product) => {
-      return result.id;
+    id: (product: Product["result"]) => {
+      return product.id;
     },
-    name: ({ result }: Product) => {
-      return result.name;
+    name: (product: Product["result"]) => {
+      return product.name;
     },
-    description: ({ result }: Product) => {
-      return result.description;
+    description: (product: Product["result"]) => {
+      return product.description;
     },
-    owner: async ({ result }: Product) => {
-      return { result: await getAccount(result.owner) };
+    owner: async (product: Product["result"]) => {
+      return getAccount(product.owner);
     },
-    createdAt: ({ result }: Product) => {
-      return result.createdAt;
+    createdAt: (product: Product["result"]) => {
+      return product.createdAt;
     },
-    updatedAt: ({ result }: Product) => {
-      return result.updatedAt;
+    updatedAt: (product: Product["result"]) => {
+      return product.updatedAt;
     },
   },
 };
