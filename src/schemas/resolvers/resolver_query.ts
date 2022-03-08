@@ -1,6 +1,6 @@
 import { checkID, getAccount } from "../functions/get";
-import { ContextType, Product } from "../functions/producttypes";
-import { ID, User } from "../functions/usertypes";
+import { Product } from "../functions/producttypes";
+import { ID } from "../functions/usertypes";
 
 export const queries_resolver = {
   Query: {
@@ -21,45 +21,9 @@ export const queries_resolver = {
     },
   },
 
-  Account: {
-    id: (user: User["result"]) => {
-      return user.id;
-    },
-    firstname: (user: User["result"]) => {
-      return user.firstname;
-    },
-    lastname: (user: User["result"]) => {
-      return user.lastname;
-    },
-    emailAddress: (user: User["result"]) => {
-      return user.emailAddress;
-    },
-    createdAt: (user: User["result"]) => {
-      return user.createdAt;
-    },
-    updatedAt: (user: User["result"]) => {
-      return user.updatedAt;
-    },
-  },
-
   Product: {
-    id: (product: Product["result"]) => {
-      return product.id;
-    },
-    name: (product: Product["result"]) => {
-      return product.name;
-    },
-    description: (product: Product["result"]) => {
-      return product.description;
-    },
-    owner: async (product: Product["result"]) => {
-      return getAccount(product.owner);
-    },
-    createdAt: (product: Product["result"]) => {
-      return product.createdAt;
-    },
-    updatedAt: (product: Product["result"]) => {
-      return product.updatedAt;
+    owner: async ({ owner }: Product["result"]) => {
+      return getAccount(owner);
     },
   },
 };
