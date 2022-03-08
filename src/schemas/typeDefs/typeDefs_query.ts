@@ -6,5 +6,6 @@ export const query_typeDefs = gql`
     products: [Product]
     account(id: Binary!): Account
     product(id: Binary!): Product
+    node(id: Binary!): Node!
   }
 `;
