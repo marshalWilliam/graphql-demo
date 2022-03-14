@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { Document } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import accountModel from "../../models/accounts";
 import productModel from "../../models/products";
@@ -53,36 +54,47 @@ export async function checkID(id: Buffer) {
 }
 
 // Get paginated products
-export async function getPaginatedProducts(paginateOptions: any) {
-  const options = {
-    limit: paginateOptions.first,
-    sort: { name: paginateOptions.sort ? paginateOptions.sort.name : 1 },
-  };
-  const findOptions = {
-    updatedAt: {
-      $lt: paginateOptions.after
-        ? paginateOptions.after
-        : Buffer.from(new Date()),
-    },
-  };
+export async function getPaginatedProducts(paginateOptions: {
+  first: number;
+  after: Buffer;
+  filter: any;
+  sort: number;
+}) {
+  const cursorKey = "cursor";
+  const sort = { [cursorKey]: paginateOptions.sort ? paginateOptions.sort : 1 };
+  const filter = { ...(paginateOptions.filter || {}) };
 
-  const result = await productModel.paginate(findOptions, options);
+  const transform = (document: Document) => document.toJSON();
 
-  return getPaginatedResult(result.docs, result.hasNextPage);
-}
+  const criteria = (field: Buffer) => ({ $gt: field });
 
-// Get Paginated Result
-function getPaginatedResult(products: Product | any, hasNextPage: boolean) {
-  const edges: Array<any> = [];
-  let endCursor: Buffer | undefined;
+  const addCursorFilter = (initialFilter: any, afterCursor: Buffer) => ({
+    ...initialFilter,
+    [cursorKey]: criteria(afterCursor),
+  });
 
-  for (let index = 0; index < products.length; index++) {
-    const cursor = Buffer.from(products[index].cursor);
-    edges.push({ cursor, node: products[index] });
+  const documents = await productModel
+    .find(filter)
+    .limit(paginateOptions.first)
+    .sort(sort);
 
-    if (index == products.length - 1) {
-      endCursor = cursor;
-    }
+  const edges = await Promise.all(
+    documents.map(async (item) => ({
+      node: await transform(item),
+      cursor: item.cursor,
+    }))
+  );
+
+  const endCursor = edges.length > 0 ? edges[edges.length - 1].cursor : null;
+
+  let hasNextPage = false;
+
+  if (edges.length >= paginateOptions.first && endCursor) {
+    hasNextPage =
+      (await productModel
+        .countDocuments(addCursorFilter(filter, endCursor))
+        .limit(1)
+        .sort(sort)) > 0;
   }
 
   return {

@@ -1,5 +1,4 @@
-import { Schema, model, Document, PaginateModel } from "mongoose";
-import paginate from "mongoose-paginate-v2";
+import { Schema, model, Document } from "mongoose";
 
 type ProductDocument = {
   id: Buffer;
@@ -28,11 +27,6 @@ const productSchema = new Schema<ProductDocument>(
   { timestamps: true }
 );
 
-productSchema.plugin(paginate);
-
-const productModel = model<ProductDocument, PaginateModel<ProductDocument>>(
-  "productdb",
-  productSchema
-);
+const productModel = model<ProductDocument>("productdb", productSchema);
 
 export default productModel;
