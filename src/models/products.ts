@@ -18,9 +18,11 @@ const productSchema = new Schema<ProductDocument>(
       type: Buffer,
       required: true,
       default(this) {
-        const buffer = Buffer.from(this.updatedAt);
+        const buffer = Buffer.alloc(6, 0);
 
-        return Buffer.concat([buffer, this._id]);
+        buffer.writeUIntBE(new Date().getTime(), 0, 6);
+
+        return Buffer.concat([buffer, Buffer.from(this.id).slice(0, 4)]);
       },
     },
   },

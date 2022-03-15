@@ -58,10 +58,12 @@ export async function getPaginatedProducts(paginateOptions: {
   first: number;
   after: Buffer;
   filter: any;
-  sort: number;
+  sort: { name: number };
 }) {
   const cursorKey = "cursor";
-  const sort = { [cursorKey]: paginateOptions.sort ? paginateOptions.sort : 1 };
+  const sort = {
+    [cursorKey]: paginateOptions.sort ? paginateOptions.sort.name : 1,
+  };
   const filter = { ...(paginateOptions.filter || {}) };
 
   const transform = (document: Document) => document.toJSON();
@@ -73,10 +75,17 @@ export async function getPaginatedProducts(paginateOptions: {
     [cursorKey]: criteria(afterCursor),
   });
 
+  const query =
+    Object.keys(paginateOptions.after || filter).length !== 0
+      ? addCursorFilter(filter, paginateOptions.after)
+      : {};
+
   const documents = await productModel
-    .find(filter)
+    .find(query)
     .limit(paginateOptions.first)
     .sort(sort);
+
+  //console.log(after(paginateOptions.after.toString()));
 
   const edges = await Promise.all(
     documents.map(async (item) => ({
