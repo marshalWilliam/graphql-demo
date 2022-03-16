@@ -28,8 +28,8 @@ export const queries_resolver = {
   },
 
   Product: {
-    id: async ({ _id }: any) => {
-      return Buffer.from(_id.data).toString();
+    id: async (product: Product["result"]) => {
+      return product.id || Buffer.from(product._id.data).toString();
     },
     owner: async ({ owner }: Product["result"]) => {
       return getAccount(owner);

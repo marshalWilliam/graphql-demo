@@ -3,7 +3,6 @@ import { Document } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import accountModel from "../../models/accounts";
 import productModel from "../../models/products";
-import { Product } from "./producttypes";
 
 //Display all Accounts
 export async function getAccounts() {
@@ -44,9 +43,9 @@ export function getID(identifier: string) {
 
 // Check if ID exist
 export async function checkID(id: Buffer) {
-  if (id.toString().includes("product", 32)) {
+  if (id.toString("hex").includes("product", 32)) {
     return productModel.findById(id);
-  } else if (id.toString().includes("account", 32)) {
+  } else if (id.toString("hex").includes("account", 32)) {
     return accountModel.findById(id);
   } else {
     return null;
