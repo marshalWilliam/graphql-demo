@@ -4,10 +4,10 @@ export const binaryScalar = new GraphQLScalarType({
   name: "Binary",
   description: "Binary custom scalar type",
   serialize(value: any) {
-    return value.toString("base64");
+    return value.toString("hex");
   },
   parseValue(value: any) {
-    return Buffer.from(value, "base64");
+    return Buffer.from(value, "hex");
   },
   parseLiteral(ast) {
     if (ast.kind !== Kind.STRING) {
@@ -16,6 +16,6 @@ export const binaryScalar = new GraphQLScalarType({
       );
     }
 
-    return Buffer.from(ast.value, "base64");
+    return Buffer.from(ast.value, "hex");
   },
 });

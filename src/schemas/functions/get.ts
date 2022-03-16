@@ -85,8 +85,6 @@ export async function getPaginatedProducts(paginateOptions: {
     .limit(paginateOptions.first)
     .sort(sort);
 
-  //console.log(after(paginateOptions.after.toString()));
-
   const edges = await Promise.all(
     documents.map(async (item) => ({
       node: await transform(item),
