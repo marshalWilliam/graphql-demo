@@ -30,11 +30,11 @@ export const types_typeDefs = gql`
 
   type PageInfo {
     hasNextPage: Boolean!
-    endCursor: Binary
+    endCursor: Cursor
   }
 
   type ProductEdge {
-    cursor: Binary!
+    cursor: Cursor!
     node: Product!
   }
 `;

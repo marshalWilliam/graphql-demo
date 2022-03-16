@@ -6,7 +6,7 @@ export const query_typeDefs = gql`
     me: Account! @private
     products(
       first: Int = 10
-      after: Binary
+      after: Cursor
       filter: ProductsFilter
       sort: ProductSortInput
     ): ProductConnection!

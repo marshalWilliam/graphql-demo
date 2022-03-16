@@ -86,7 +86,7 @@ const updateProductDataSuccess = {
   }`,
   variables: {
     input: {
-      id: "937f6cd8de9d400e89ff3f82cb472b47product",
+      id: "7fa2f796451e4f64aecbe5e2e92be52dproduct",
       body: {
         name: "Keyboard",
         description: "The keys got aboard.",
@@ -124,7 +124,7 @@ const updateProductDataFail_cannotUpdate = {
   }`,
   variables: {
     input: {
-      id: "c8fc2ab428d142d5a02912bb01247ae2product",
+      id: "4a0d5190ab0e47f9b9875b3b0befdb54product",
       body: {
         name: "Keyboard",
         description: "The keys got aboard.",
@@ -141,7 +141,7 @@ const deleteProductDataSuccess = {
   }`,
   variables: {
     input: {
-      id: "03791ef51f7247ceb7be920419cf3caeproduct",
+      id: "dbf9167088444c3b9ba1bb383d3abe22product",
     },
   },
 };
@@ -157,13 +157,13 @@ const deleteProductDataFail_notFound = {
   },
 };
 
-const deleteProductDataFail_cannotUpdate = {
+const deleteProductDataFail_cannotDelete = {
   query: `mutation DeleteProduct($input: DeleteProductInput!) {
     deleteProduct(input: $input)
   }`,
   variables: {
     input: {
-      id: "c8fc2ab428d142d5a02912bb01247ae2product",
+      id: "4a0d5190ab0e47f9b9875b3b0befdb54product",
     },
   },
 };
@@ -180,5 +180,5 @@ export {
   updateProductDataFail_cannotUpdate,
   deleteProductDataSuccess,
   deleteProductDataFail_notFound,
-  deleteProductDataFail_cannotUpdate,
+  deleteProductDataFail_cannotDelete,
 };
